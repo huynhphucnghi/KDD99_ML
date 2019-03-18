@@ -24,6 +24,12 @@ def main():
     y_pred = gnb.predict(X_test)
     print("Number of mislabeled points out of a total %d points : %d"
         % (X_test.shape[0],(y_test != y_pred).sum()))
+    # Metric
+    from sklearn.metrics import precision_recall_fscore_support
+    precision, recall, fscore, _ = precision_recall_fscore_support(y_test, y_pred, average='macro')
+    print('Precision score  = TP/(TP+FP)    = ', precision)
+    print('Recall score     = TP/(TP+FN)    = ', recall)
+    print('F-score score    = 2*(P*R)/(P+R) = ', fscore)
 
     # Crossvalidation
     print('Crossvalidation:')
