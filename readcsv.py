@@ -7,7 +7,8 @@ import pandas as pd
 from utils import *
 
 path = 'Data/'
-filecsv = 'data.csv'
+# filecsv = 'data.csv'
+filecsv = 'kddcup.data.corrected.csv'
 class_list = ['smurf.', 'land.', 'pod.', 'teardrop.', 'neptune.', 'back.', 'normal.']
 
 def readfileCSV():
@@ -28,17 +29,22 @@ def readfileCSV():
     print(dataset.shape)
 
     # Frequency per label
-    unique, count = np.unique(target, return_counts=True)
+    unique, count = np.unique(df['label'], return_counts=True)
     print(np.asarray((unique, count)))
 
     # Future selection
     from sklearn.datasets import load_digits
     from sklearn.feature_selection import SelectKBest, SelectPercentile, chi2
     # Use SelectKBest
-    dataset = SelectKBest(chi2, k=20).fit_transform(dataset, target)
+    selector = SelectKBest(chi2, k=15)
+    selector.fit(dataset, target)
+
+    dataset = selector.transform(dataset)
+
+    index = selector.get_support(indices=True)
+    print(index)
     # Use SelectPercentile
     # dataset = SelectPercentile(chi2, percentile=50).fit_transform(dataset, target)
-
     print(dataset.shape)
 
     return dataset, target

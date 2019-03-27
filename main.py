@@ -41,7 +41,7 @@ def main():
     gnb = GaussianNB()
     scores = cross_val_score(gnb, dataset, target, cv=5)
     print (scores)
-    print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+    print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
 
 if __name__ == "__main__":
     dataset, target = readfileCSV()
