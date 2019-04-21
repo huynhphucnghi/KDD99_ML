@@ -1,2 +1,2 @@
 # KDD99_NB
-KDD99 Naive Bayes
+KDD99 Naive Bayes + KNeighbors
