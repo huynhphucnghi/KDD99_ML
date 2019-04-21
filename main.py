@@ -1,7 +1,9 @@
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
 
 from readcsv import readfileCSV
+from utils import *
+
 
 def main():
     # Non crossvalidation
@@ -14,20 +16,27 @@ def main():
     X_test = np.asarray(X_test).astype(np.float)
     y_train = np.asarray(y_train).astype(np.float)
     y_test = np.asarray(y_test).astype(np.float)
-    # 
+    #
 
-    # GaussianNB
-    from sklearn.naive_bayes import GaussianNB
-    gnb = GaussianNB().fit(X_train,y_train)
-    score = gnb.score(X_test,y_test)
+    # Model
+    # model = NBmodel()
+    model = KNNmodel()
+
+    # fit model
+    model = model.fit(X_train, y_train)
+    # Model score
+    score = model.score(X_test, y_test)
     print('test score: ', score)
-    y_pred = gnb.predict(X_test)
+
+    y_pred = model.predict(X_test)
+    # Number of missing
     print("Number of mislabeled points out of a total %d points : %d"
-        % (X_test.shape[0],(y_test != y_pred).sum()))
+          % (X_test.shape[0], (y_test != y_pred).sum()))
     # Metric
     print('Precision, Recall, Fscore, Support per class:')
     from sklearn.metrics import precision_recall_fscore_support
-    precision, recall, fscore, support = precision_recall_fscore_support(y_test, y_pred)
+    precision, recall, fscore, support = precision_recall_fscore_support(
+        y_test, y_pred)
     np.set_printoptions(formatter={'float': '{: 0.3f}'.format})
     print('Precision:   {}'.format(precision))
     print('Recall:      {}'.format(recall))
@@ -37,11 +46,8 @@ def main():
 
     # Crossvalidation
     print('Crossvalidation:')
-    from sklearn.model_selection import cross_val_score
-    gnb = GaussianNB()
-    scores = cross_val_score(gnb, dataset, target, cv=5)
-    print (scores)
-    print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
+    crossvalidation(model, dataset, target)
+
 
 if __name__ == "__main__":
     dataset, target = readfileCSV()
