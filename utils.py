@@ -1,4 +1,4 @@
-
+import pickle
 
 # CONSTANT
 categories = ['duration', 
@@ -43,3 +43,19 @@ categories = ['duration',
     'dst_host_rerror_rate',
     'dst_host_srv_rerror_rate',
     'label']
+
+
+# class Engine():
+#     def __init__(self, model_file):
+#         self.model = pickle.load(open(model_file, 'rb'))
+#     def predict(self, X_test):
+#         y_pred = self.model.predict(X_test)
+#         return y_pred
+
+
+def load_model(model_file):
+    return pickle.load(open(model_file, 'rb'))
+
+def custom_predict(model_file, X_test):
+    model = load_model(model_file)
+    return model.predict(X_test)
