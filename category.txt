@@ -1,1 +1,0 @@
-{'ftp_write.', 'nmap.', 'buffer_overflow.', 'satan.', 'normal.', 'smurf.', 'warezmaster.', 'ipsweep.', 'spy.', 'teardrop.', 'guess_passwd.', 'land.', 'phf.', 'imap.', 'multihop.', 'rootkit.', 'pod.', 'perl.', 'portsweep.', 'neptune.', 'back.', 'warezclient.', 'loadmodule.'}
