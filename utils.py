@@ -1,13 +1,15 @@
 import numpy as np
 import time
 import pandas as pd
+import pickle
 
+SIZE = 20000
 
 def readTrainCSV(inputcsv, fea_sel=0):
     # preselection for running
     df = pd.read_csv(inputcsv,
-                     #  nrows=100000,
-                     #  usecols=range(len(full_categories))
+                    #   nrows=SIZE,
+                    #   usecols=range(len(full_categories))
                      )
     # Converter
 
@@ -55,25 +57,9 @@ def readTrainCSV(inputcsv, fea_sel=0):
 
     return dataset, target
 
+def load_model(model_file):
+    return pickle.load(open(model_file, 'rb'))
 
-def loadModel():
-
-    # Model
-    model = NBmodel()
-    # model = KNNmodel()
-
-    # fit model
-    # model = model.fit(X_train, y_train)
-
-    # from sklearn.externals import joblib
-    # filename = './model/model1.sav'
-    # joblib.dump(model, filename)
-
-    return model
-
-
-def crossvalidation(model, dataset, target):
-    from sklearn.model_selection import cross_val_score
-    scores = cross_val_score(model, dataset, target, cv=5)
-    print(scores)
-    print("Accuracy: %0.4f (+/- %0.4f)" % (scores.mean(), scores.std() * 2))
+def custom_predict(model_file, X_test):
+    model = load_model(model_file)
+    return model.predict(X_test)
