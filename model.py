@@ -32,6 +32,7 @@ class Trainer():
         begin_time = time.time()
         self.y_pred = self.model.predict(X)
         self.pred_time = time.time() - begin_time
+        return self.y_pred
 
     def save_model(self, trained_file_name):
         pickle.dump(self.model, open(trained_file_name, 'wb'))
