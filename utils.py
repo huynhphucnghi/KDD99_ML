@@ -11,13 +11,15 @@ SIZE = 20000
 
 
 def preprocess(array):
-    return array
+    dataset = array[:, 1:-1]
+    target = array[:, -1]
+    return dataset, target
 
 
 def readTrainCSV(inputcsv, fea_sel=0):
     # preselection for running
     df = pd.read_csv(inputcsv,
-                     #  nrows=SIZE,
+                     nrows=SIZE,
                      #   usecols=range(len(full_categories))
                      )
     # Converter
@@ -28,13 +30,12 @@ def readTrainCSV(inputcsv, fea_sel=0):
     print(np.asarray((unique, count)))
 
     # Devide
-    dataset = df.iloc[:, 1:-1]
-    target = df.iloc[:, -1]
-    dataset = np.asarray(dataset).astype(np.float)
-    target = np.asarray(target)
+    data = np.asarray(df)
+    # dataset = df.iloc[:, 1:-1]
+    # target = df.iloc[:, -1]
 
     # Preprocessing
-    dataset = preprocess(dataset)
+    dataset, target = preprocess(data)
 
     # Label encoder
     from sklearn import preprocessing
