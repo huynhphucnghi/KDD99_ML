@@ -19,7 +19,7 @@ def preprocess(array):
 def readTrainCSV(inputcsv, fea_sel=0):
     # preselection for running
     df = pd.read_csv(inputcsv,
-                     nrows=SIZE,
+                     #  nrows=SIZE,
                      #   usecols=range(len(full_categories))
                      )
     # Converter
