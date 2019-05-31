@@ -4,7 +4,8 @@ import glob
 import sys
 import time
 import numpy as np
-from model import Trainer
+from keras.models import load_model
+import joblib
 
 PATH = '../CICFlowMeter-4.0/bin/data/daily/'
 
@@ -19,8 +20,8 @@ count = 0
 print('Number of columns: %d' % len(header))
 print('Reading %s\n' % target_file)
 
-model = Trainer()
-model.load_model('./SVM_classifier.sav')
+model = load_model('models/ddos_model.h5')
+scaler = joblib.load('models/ddos_scaler.pkl')
 
 while True:
     row = reader.readline()
@@ -28,14 +29,15 @@ while True:
         time.sleep(0.1)
         continue
     count += 1
-    # sys.stdout.write('\r' + str(count))
-    # sys.stdout.flush()
+    sys.stdout.write("\rFlow: " + str(count))
+    sys.stdout.flush()
 
     # Preprocess
     row = row.split(separator)[:-1]
-    row = np.delete(np.array(row), [0, 1, 2, 3, 5, 6], 0)
-    row = row.astype(np.float32)
-
+    id = row[0]
+    row = np.delete(np.array(row), [0, 1, 2, 3, 4, 5, 6, 71], 0)
+    row = row.astype(np.float64)
     # Classify
-    label = model.predict([row])
-    print(label)
+    label = model.predict_classes(scaler.transform([row]))[0]
+    if label > 0:
+        print('\r%-50s -> %d' % (id, label))
