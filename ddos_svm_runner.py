@@ -1,0 +1,59 @@
+import os
+import glob
+import sys
+import time
+import numpy as np
+from keras.models import load_model
+import joblib
+from model import Trainer
+
+scaler = joblib.load('models/ddos_scaler.pkl')
+PATH = './CICFlowMeter-4.0/bin/data/daily/'
+
+while len(glob.glob(PATH + '*.csv')) == 0:
+    pass
+target_file = sorted(glob.glob(PATH + '*.csv'))[-1]
+
+
+separator = ','
+reader = open(target_file, 'r')
+header = reader.readline().split(separator)
+count = 0
+
+print('Number of columns: %d' % len(header))
+print('Reading %s\n' % target_file)
+
+model = Trainer()
+model.load_model('models/SVM_classifier.sav')
+
+counts = [0, 0]
+
+outputFile = open('svm.csv', 'w')
+print('')
+
+while True:
+    row = reader.readline()
+    if not row:
+        time.sleep(0.1)
+        continue
+
+    # Preprocess
+    row = row.split(separator)[:-1]
+    id = row[0]
+    row = np.delete(np.array(row), [0, 1, 2, 3, 4, 5, 6, 71], 0)
+    # Handle NaN and Infinity
+    for i in range(len(row)):
+        if row[i] == 'NaN':
+            row[i] = 0
+        elif row[i] == 'Infinity':
+            row[i] = 1.79e+308
+    row = row.astype(np.float64)
+    # Classify
+    label = model.predict([row])[0]
+    
+    # Update & print
+    count += 1
+    counts[int(label)] += 1
+    outputFile.write('%s, %d\n' % (id, label))
+    sys.stdout.write('\rCount: %d' % count)
+    sys.stdout.flush()
