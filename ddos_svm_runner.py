@@ -55,5 +55,8 @@ while True:
     count += 1
     counts[int(label)] += 1
     outputFile.write('%s, %d\n' % (id, label))
-    sys.stdout.write('\rCount: %d' % count)
+
+    if int(label) != 0:
+        sys.stdout.write('\r%-50s -> %10d\n' % (id, label))
+    sys.stdout.write('\rCount: %d, DDoS: %d' % (count, counts[1]))
     sys.stdout.flush()
